@@ -45,6 +45,14 @@ public class UserService {
 	}
 	
 	public User update(User user) {
+		Optional<User> curEntry = repository.findById(user.getUserId());
+		if(!curEntry.isPresent())
+			throw new ApiRequestException("User doesn't exist.");
+		
+		if(user.getPassword() == null || user.getPassword().isEmpty()) {
+			user.setPassword(curEntry.get().getPassword());
+		}
+		
 		return repository.save(user);
 	}
 	
